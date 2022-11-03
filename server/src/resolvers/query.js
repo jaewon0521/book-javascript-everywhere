@@ -5,48 +5,49 @@ module.exports = {
   note: async (parent, args, { models }) => {
     return await models.Note.findById(args.id);
   },
-  user: async (parent, { username }, { models }) => {
-    return await models.User.findOne({ username });
+  user: async (parent, args, { models }) => {
+    return await models.User.findOne({ username: args.username });
   },
   users: async (parent, args, { models }) => {
-    return await models.User.find();
+    return await models.User.find({}).limit(100);
   },
   me: async (parent, args, { models, user }) => {
-    return await models.User.findById(user._id);
+    return await models.User.findById(user.id);
   },
   noteFeed: async (parent, { cursor }, { models }) => {
+    // hard code the limit to 10 items
     const limit = 10;
+    // set the default hasNextPage value to false
     let hasNextPage = false;
-    // 전달된 cursor가 없으면 기본 query는 빈 배열을 할당
-    // 이를 통해 DB에서 최신 노트 목록을 가져온다.
+    // if no cursor is passed the default query will be empty
+    // this will pull the newest notes from the db
     let cursorQuery = {};
 
-    // cursor가 있으면
-    // 쿼리가 cursor 미만의 ObjectId를 가진 노트를 탐색
+    // if there is a cursor
+    // our query will look for notes with an ObjectId less than that of the cursor
     if (cursor) {
       cursorQuery = { _id: { $lt: cursor } };
     }
 
-    // DB에서 limit + 1개의 노트를 탐색하고 최신순으로 정렬
+    // find the limit + 1 of notes in our db, sorted newest to oldest
     let notes = await models.Note.find(cursorQuery)
       .sort({ _id: -1 })
       .limit(limit + 1);
 
-    // 노트 개수가 limit를 초과하면
-    // hasNextPage를 true로 설정하고 notes를 limit까지 자름
-
+    // if the number of notes we find exceeds our limit
+    // set hasNextPage to true & trim the notes to the limit
     if (notes.length > limit) {
       hasNextPage = true;
-      notes = notes.slice(0 - 1);
+      notes = notes.slice(0, -1);
     }
 
-    // 새 cursor는 피드 배열 마지막 항목의 몽고 객체 ID
+    // the new cursor will be the Mongo ObjectID of the last item in the feed array
     const newCursor = notes[notes.length - 1]._id;
 
     return {
       notes,
       cursor: newCursor,
-      hasNextPage
+      hasNextPage,
     };
-  }
+  },
 };

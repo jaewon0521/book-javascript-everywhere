@@ -1,20 +1,21 @@
+// Require the mongose library
 const mongoose = require('mongoose');
 
 module.exports = {
   connect: DB_HOST => {
-    // 몽고 드라이버의 업데이트된 URL 스트링 파서 사용
+    // Use the Mongo driver's updated URL string parser
     mongoose.set('useNewUrlParser', true);
-    // findAndModify() 대신 findOneAndUpdate() 사용
+    // Use `findOneAndUpdate()` in place of findAndModify()
     mongoose.set('useFindAndModify', false);
-    // ensureIndex() 대신 createIndex() 사용
+    // Use `createIndex()` in place of `ensureIndex()`
     mongoose.set('useCreateIndex', true);
-    // 새로운 서버 디스커버리 및 모니터링 엔진 사용
+    // Use the new server discovery & monitoring engine
     mongoose.set('useUnifiedTopology', true);
-    // DB 연결
+    // Connect to the DB
     mongoose.connect(DB_HOST);
-    // 연결 실패시 에러 로깅
+    // Log an error if we fail to connect
     mongoose.connection.on('error', err => {
-      console.erroe(err);
+      console.error(err);
       console.log(
         'MongoDB connection error. Please make sure MongoDB is running.'
       );

@@ -1,10 +1,10 @@
 module.exports = {
-  // 요청받으면 note의 author 정보를 resolve
+  // Resolve the author info for a note when requested
   author: async (note, args, { models }) => {
     return await models.User.findById(note.author);
   },
-  // 요청받으면 note의 favorites 목록 정보를 resolve
+  // Resolved the favoritedBy info for a note when requested
   favoritedBy: async (note, args, { models }) => {
-    return await models.User.find({ _id: note.favoritedBy });
+    return await models.User.find({ _id: { $in: note.favoritedBy } });
   }
 };
