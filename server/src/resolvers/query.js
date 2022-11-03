@@ -44,10 +44,12 @@ module.exports = {
     // the new cursor will be the Mongo ObjectID of the last item in the feed array
     const newCursor = notes[notes.length - 1]._id;
 
+    console.log(notes);
+
     return {
       notes,
       cursor: newCursor,
-      hasNextPage,
+      hasNextPage
     };
-  },
+  }
 };

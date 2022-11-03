@@ -1,6 +1,8 @@
 import React from 'react';
-import Button from '../components/Button';
 import { useQuery, gql } from '@apollo/client';
+import Button from '../components/Button';
+import NoteFeed from '../components/NoteFeed';
+import { useCallback } from 'react';
 
 const GET_NOTES = gql`
   query NoteFeed($cursor: String) {
@@ -24,17 +26,37 @@ const GET_NOTES = gql`
 
 const Home = () => {
   const { data, loading, error, fetchMore } = useQuery(GET_NOTES);
-  console.log(data);
+
+  const handleNextPage = useCallback(() => {
+    fetchMore({
+      variables: { cursor: data.noteFeed.cursor },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        return {
+          noteFeed: {
+            cursor: fetchMoreResult.noteFeed.cursor,
+            hasNextPage: fetchMoreResult.notefeed.hasNextPage,
+            notes: [
+              ...previousResult.noteFeed.notes,
+              ...fetchMoreResult.noteFeed.notes
+            ],
+            _typename: 'noteFeed'
+          }
+        };
+      }
+    });
+  }, []);
 
   if (loading) return <p>Loading...</p>;
 
   if (error) return <p>Error!</p>;
 
   return (
-    <div>
-      <p>{console.log(data)}</p>
-      <Button>Click me</Button>
-    </div>
+    <React.Fragment>
+      <NoteFeed notes={data.noteFeed.notes} />
+      {data.noteFeed.hasNextPage && (
+        <Button onClick={handleNextPage}>Load more</Button>
+      )}
+    </React.Fragment>
   );
 };
 
