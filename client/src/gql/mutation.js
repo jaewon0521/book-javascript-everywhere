@@ -43,4 +43,10 @@ const EDIT_NOTE = gql`
     }
   }
 `;
-export { NEW_NOTE, SIGNIN_USER, EDIT_NOTE };
+
+const DELETE_NOTE = gql`
+  mutation deleteNote($id: ID!) {
+    deleteNote(id: $id)
+  }
+`;
+export { NEW_NOTE, SIGNIN_USER, EDIT_NOTE, DELETE_NOTE };
