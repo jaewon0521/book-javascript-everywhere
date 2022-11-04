@@ -9,16 +9,17 @@ import Mynotes from './mynotes';
 import NotePage from './NotePage';
 import Signup from './Signup';
 import Signin from './Signin';
+import PrivateRoute from './PrivateRoute';
 
 const Index = () => {
   return (
     <Router>
       <Layout>
         <Route exact path="/" component={Home} />
-        <Route path="/mynotes" component={Mynotes} />
+        <PrivateRoute path="/mynotes" component={Mynotes} />
+        <PrivateRoute path="/favorites" component={Favorites} />
         <Route path="/signup" component={Signup} />
         <Route path="/signin" component={Signin} />
-        <Route path="/favorites" component={Favorites} />
         <Route path="/note/:id" component={NotePage} />
       </Layout>
     </Router>
