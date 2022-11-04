@@ -2,14 +2,9 @@ import { gql, useQuery } from '@apollo/client';
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import { IS_LOGGED_IN } from '../gql/query';
 import logo from '../img/logo.svg';
 import ButtonAsLink from './ButtonAsLink';
-
-const IS_LOGGED_IN = gql`
-  {
-    isLoggedIn @client
-  }
-`;
 
 const Header = props => {
   const { data, client } = useQuery(IS_LOGGED_IN);
