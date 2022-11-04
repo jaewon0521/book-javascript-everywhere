@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
+import Button from './Button';
 
 const UserForm = props => {
   const [formData, setFormData] = useState({});
@@ -11,6 +12,7 @@ const UserForm = props => {
 
   const handleSumit = e => {
     e.preventDefault();
+    console.log(props.action);
     props.action({
       variables: {
         ...formData
@@ -20,7 +22,7 @@ const UserForm = props => {
 
   return (
     <Wrapper>
-      <h2>Sign Up</h2>
+      {props.formType === 'signup' ? <h2>Sign Up</h2> : <h2>Sign In</h2>}
       <Form onSubmit={handleSumit}>
         {props.formType === 'signup' && (
           <React.Fragment>

@@ -2,11 +2,20 @@ import React, { useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { format } from 'date-fns';
 import styled from 'styled-components';
+import { useQuery } from '@apollo/client';
+import { IS_LOGGED_IN } from '../gql/query';
+import NoteUser from './NoteUser';
 
 const Note = ({ note }) => {
+  const { loading, error, data } = useQuery(IS_LOGGED_IN);
   const formatDate = useCallback(() => format(note.createdAt, 'MMM Do YYYY'), [
     note.createdAt
   ]);
+
+  if (loading) return <p>Loading...</p>;
+
+  if (error) return <p>Error!</p>;
+
   return (
     <StyledNote>
       <MetaData>
@@ -21,9 +30,15 @@ const Note = ({ note }) => {
           <em>by</em> {note.author.username} <br />
           {formatDate()}
         </MetaInfo>
-        <UserActions>
-          <em>Favorites:</em> {note.favoriteCount}
-        </UserActions>
+        {data.isLoggedIn ? (
+          <UserActions>
+            <NoteUser note={note} />
+          </UserActions>
+        ) : (
+          <UserActions>
+            <em>Favorites:</em> {note.favoriteCount}
+          </UserActions>
+        )}
       </MetaData>
       <ReactMarkdown source={note.content} />
     </StyledNote>

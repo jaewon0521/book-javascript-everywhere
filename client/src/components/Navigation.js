@@ -24,6 +24,14 @@ const Navigation = () => {
           </span>
           <Link to="/favorites">Favorites</Link>
         </li>
+        <li>
+          <Link to="/new">
+            <span aria-hidden="true" role="img">
+              ➕
+            </span>
+            New
+          </Link>
+        </li>
       </NavList>
     </Nav>
   );
