@@ -7,6 +7,8 @@ import Home from './home';
 import Favorites from './favorites';
 import Mynotes from './mynotes';
 import NotePage from './NotePage';
+import Signup from './Signup';
+import Signin from './Signin';
 
 const Index = () => {
   return (
@@ -14,6 +16,8 @@ const Index = () => {
       <Layout>
         <Route exact path="/" component={Home} />
         <Route path="/mynotes" component={Mynotes} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/signin" component={Signin} />
         <Route path="/favorites" component={Favorites} />
         <Route path="/note/:id" component={NotePage} />
       </Layout>
